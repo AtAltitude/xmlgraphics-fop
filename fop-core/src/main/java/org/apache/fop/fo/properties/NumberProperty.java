@@ -96,8 +96,45 @@ public final class NumberProperty extends Property implements Numeric {
             Number val = p.getNumber();
             if (val != null) {
                 int i = Math.round(val.floatValue());
-                if (i <= 0) {
-                    i = 1;
+                if (i < 0) {
+                    i = 0;
+                }
+                return getInstance(i);
+            }
+            return convertPropertyDatatype(p, propertyList, fo);
+        }
+
+    }
+    
+    /**
+     * A positive integer property maker.
+     */
+    public static class PositiveOrZeroIntegerMaker extends PropertyMaker {
+
+        /**
+         * Constructor for NumberProperty.PositiveOrZeroIntegerMaker
+         * @param propId the id of the property for which a PositiveOrZeroIntegerMaker should be created
+         */
+        public PositiveOrZeroIntegerMaker(int propId) {
+            super(propId);
+        }
+
+        /**
+         * If the value is not positive, return a property with value 0
+         *
+         * {@inheritDoc}
+         */
+        public Property convertProperty(Property p,
+                                        PropertyList propertyList, FObj fo)
+                    throws PropertyException {
+            if (p instanceof EnumProperty) {
+                return EnumNumber.getInstance(p);
+            }
+            Number val = p.getNumber();
+            if (val != null) {
+                int i = Math.round(val.floatValue());
+                if (i < 0) {
+                    i = 0;
                 }
                 return getInstance(i);
             }

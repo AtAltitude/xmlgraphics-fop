@@ -74,7 +74,7 @@ public class PDFPageLabels extends PDFNumberTreeNode {
             if (pageLabel.charAt(zeroPadding) == '0') {
                 do {
                     zeroPadding++;
-                } while (pageLabel.charAt(zeroPadding) == '0');
+                } while (zeroPadding < pageLabel.length() && pageLabel.charAt(zeroPadding) == '0');
                 currentZeroPaddingPrefix = padding.substring(0, zeroPadding);
                 if (currentZeroPaddingPrefix.length() != lastZeroPaddingPrefix.length()) {
                     addNewPageLabel = true;

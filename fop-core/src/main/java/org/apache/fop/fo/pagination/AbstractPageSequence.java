@@ -98,6 +98,7 @@ public abstract class AbstractPageSequence extends FObj implements CommonAccessi
         if (initialPageNumber.getEnum() != 0) {
             // auto | auto-odd | auto-even.
             startingPageNumber = getRoot().getEndingPageNumberOfPreviousSequence() + 1;
+            
             pageNumberType = initialPageNumber.getEnum();
             if (pageNumberType == EN_AUTO_ODD) {
                 if (startingPageNumber % 2 == 0) {
@@ -110,7 +111,7 @@ public abstract class AbstractPageSequence extends FObj implements CommonAccessi
             }
         } else { // <integer> for explicit page number
             int pageStart = initialPageNumber.getValue();
-            startingPageNumber = (pageStart > 0) ? pageStart : 1; // spec rule
+            startingPageNumber = (pageStart >= 0) ? pageStart : 1; // spec rule
         }
     }
 
