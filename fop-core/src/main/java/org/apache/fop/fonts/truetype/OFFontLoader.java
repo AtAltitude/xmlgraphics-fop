@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
@@ -110,21 +111,62 @@ public class OFFontLoader extends FontLoader {
      * @throws IOException if an I/O error occurs
      */
     private void read(String ttcFontName) throws IOException {
-        InputStream in = resourceResolver.getResource(this.fontFileURI);
-        try {
-            FontFileReader reader = new FontFileReader(in);
-            String header = readHeader(reader);
-            boolean isCFF = header.equals("OTTO");
-            OpenFont otf = (isCFF) ? new OTFFile(useKerning, useAdvanced) : new TTFFile(useKerning, useAdvanced);
-            boolean supported = otf.readFont(reader, header, ttcFontName);
-            if (!supported) {
-                throw new IOException("The font does not have a Unicode cmap table: " + fontFileURI);
-            }
-            buildFont(otf, ttcFontName);
-            loaded = true;
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
+		/*if (ttcFontName == null) {
+			//If no TTC font name is defined, load all available fonts
+			InputStream in = resourceResolver.getResource(this.fontFileURI);
+			try {
+				FontFileReader reader = new FontFileReader(in);
+				String header = readHeader(reader);
+				boolean isCFF = header.equals("OTTO");
+				OpenFont otf = (isCFF) ? new OTFFile(useKerning, useAdvanced) : new TTFFile(useKerning, useAdvanced);
+				
+				reader.seekSet(0);
+				//Get list of font names
+				final List<String> ttcFontNames = otf.getTTCnames(reader);
+				
+				//Reset seeker to end of header
+				reader.seekSet(4);
+				
+				//Load font
+				if (ttcFontNames == null) {
+					//Not a TTC font, just load the font as-is
+					boolean supported = otf.readFont(reader, header, ttcFontName);
+					if (!supported) {
+						throw new IOException("The font does not have a Unicode cmap table: " + fontFileURI);
+					}
+					buildFont(otf, ttcFontName);
+					loaded = true;
+				} else {
+					//TTC font, load all
+					//TODO: Actually load all fonts contained in the package
+					boolean supported = otf.readFont(reader, header, ttcFontNames.get(0));
+					if (!supported) {
+						throw new IOException("The font does not have a Unicode cmap table: " + fontFileURI);
+					}
+					buildFont(otf, ttcFontName);
+					loaded = true;
+				}
+			} finally {
+				IOUtils.closeQuietly(in);
+			}
+		} else {*/
+			//If a TTC font name is defined, use default behavior
+			InputStream in = resourceResolver.getResource(this.fontFileURI);
+			try {
+				FontFileReader reader = new FontFileReader(in);
+				String header = readHeader(reader);
+				boolean isCFF = header.equals("OTTO");
+				OpenFont otf = (isCFF) ? new OTFFile(useKerning, useAdvanced) : new TTFFile(useKerning, useAdvanced);
+				boolean supported = otf.readFont(reader, header, ttcFontName);
+				if (!supported) {
+					throw new IOException("The font does not have a Unicode cmap table: " + fontFileURI);
+				}
+				buildFont(otf, ttcFontName);
+				loaded = true;
+			} finally {
+				IOUtils.closeQuietly(in);
+			}
+		//}
     }
 
     public static String readHeader(FontFileReader fontFile) throws IOException {

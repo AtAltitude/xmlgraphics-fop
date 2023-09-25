@@ -159,12 +159,12 @@ public class FontInfo {
     private void logDuplicateFont(FontTriplet triplet, boolean replacing, String oldKey, int oldPriority,
             String newKey, int newPriority) {
         if (log.isDebugEnabled()) {
-            log.debug(triplet
+            /*log.debug(triplet
                     + (replacing ? ": Replacing " : ": Not replacing ")
                     + fonts.get(triplets.get(triplet)).getFullName()
                     + " (priority=" + oldPriority + ") by "
                     + fonts.get(newKey).getFullName()
-                    + " (priority=" + newPriority + ")");
+                    + " (priority=" + newPriority + ")");*/
         }
     }
 
